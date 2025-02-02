@@ -5,10 +5,8 @@ import ReactPlayer from "react-player"
 import { useNavigate } from 'react-router-dom'
 
 function Room() {
-    // const [isTrackSending, setIsTrackSending] = useState(false)
     const [called, setCalled] = useState(false)
     const [noOfOffers, setNoOfOffers] = useState(0)
-    // const mediaRecorderRef = useRef(null);
     const [myStream, setMyStream] = useState()
     const [isConnected, setIsConnected] = useState(null)
     const [remoteStream, setRemoteStream] = useState()
@@ -29,11 +27,6 @@ function Room() {
 
     const handleCall = useCallback(async () => {
         setCalled(true)
-        // for (const track of myStream.getTracks()) {
-        //     peer.peer.addTrack(track, myStream)
-        //     console.log("Sending streams....", track)
-        // }
-
         const offer = await peer.getOffer()
         console.log("Remote Socket id -->", remoteSocketId)
         socket.emit("call-user", { to: remoteSocketId, offer })
@@ -47,10 +40,6 @@ function Room() {
         console.log("Call Accepted with - Answer --> ", answer);
 
         setNoOfOffers(prev => ++prev)
-        // for (const track of myStream.getTracks()) {
-        //     peer.peer.addTrack(track, myStream)
-        //     console.log("Sending streams....", track)
-        // }
     }, [socket])
 
     const handleCallAcceptedConfirm = useCallback(async ({ answer, from }) => {
@@ -61,11 +50,6 @@ function Room() {
             peer.peer.addTrack(track, myStream)
             console.log("Sending streams....", track)
         }
-        // const offer = await peer.getOffer();
-        // socket.emit("peer-nego-needed", { offer, to: remoteSocketId });
-        // if (!isTrackSending) {
-        //     setIsTrackSending(true)
-        // }
         setNoOfOffers(prev => ++prev)
     }, [myStream])
 
@@ -88,10 +72,6 @@ function Room() {
         setNoOfOffers(prev => ++prev)
     }, [myStream]);
 
-    // const connctionSuccess = useCallback(()=>{
-    //     setConnState({isConnecting: false, connected: true})
-    // }, [])
-
     useEffect(() => {
         console.log("USE EFFECT-->", remoteSocketId);
         if(remoteSocketId){
@@ -99,24 +79,8 @@ function Room() {
                 console.log("NEGOTIATION NEEDED");
                 handleNegoNeeded()
             })
-            // peer.peer.addEventListener("icegatheringstatechange", ()=>{
-                // console.log("Gathering --> ", peer.peer.iceGatheringState);
-                // console.log("Connection --> ", peer.peer.iceConnectionState);
-                // if(called){
-                //     if(peer.peer.iceGatheringState == "gathering" || peer.peer.iceGatheringState == "complete"){
-                //         handleNegoNeeded()
-                //     }
-                // }
-                // else{
-                //     for (const track of myStream.getTracks()) {
-                //         peer.peer.addTrack(track, myStream)
-                //         console.log("Sending streams....", track)
-                //     }
-                // }
-            // })
 
             peer.peer.addEventListener("track", (ev) => {
-                // console.log("Getting streams....", ev.streams[0])
                 setRemoteStream(ev.streams[0])
             })
         }
@@ -136,9 +100,6 @@ function Room() {
             }
             setIsConnected(true)
         }
-        // if(noOfOffers == 3){
-        //     socket.emit("connection-success")
-        // }
     }, [noOfOffers, myStream])
     
     useEffect(() => {
@@ -156,7 +117,6 @@ function Room() {
         socket.on("call-accepted-confirm", handleCallAcceptedConfirm)
         socket.on("peer-nego-incoming", handleNegoNeedIncomming);
         socket.on("peer-nego-final", handleNegoNeedFinal);
-        // socket.on("connection-success", connctionSuccess);
 
         return () => {
             socket.off("user-joined", handleUserJoined)
@@ -165,7 +125,6 @@ function Room() {
             socket.off("call-accepted-confirm", handleCallAcceptedConfirm)
             socket.off("peer-nego-incoming", handleNegoNeedIncomming);
             socket.off("peer-nego-final", handleNegoNeedFinal);
-            // socket.off("connection-success", connctionSuccess);
         }
     }, [socket, handleUserJoined, handleUserJoinedConfirm, handleIncomingCall, handleCallAcceptedConfirm])
 

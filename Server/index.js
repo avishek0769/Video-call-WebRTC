@@ -44,8 +44,4 @@ io.on("connection", (socket) => {
     socket.on("connection-success", (to)=>{
         io.to(to).emit("connection-success");
     })
-
-    // socket.on("sendStream:server", ()=>{
-    //     io.to(to).emit("")
-    // })
 })

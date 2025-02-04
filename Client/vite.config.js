@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://xbsmsrft-3000.inc1.devtunnels.ms', // Replace with your API URL
+        target: 'http://localhost:3001', // Replace with your API URL
         changeOrigin: true,
         secure: false,
       },

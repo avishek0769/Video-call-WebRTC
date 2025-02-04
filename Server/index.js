@@ -1,6 +1,6 @@
 import { Server } from "socket.io"
 
-const io = new Server(3000, {
+const io = new Server(3001, {
     cors: true
 })
 

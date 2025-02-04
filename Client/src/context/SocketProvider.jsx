@@ -4,7 +4,7 @@ import { io } from "socket.io-client"
 export const SocketContext = createContext(null)
 
 function SocketProvider({children}) {
-    const socket = useMemo(() => io("https://xbsmsrft-3000.inc1.devtunnels.ms"), [])
+    const socket = useMemo(() => io("http://localhost:3001"), [])
     return (
         <SocketContext.Provider value={socket}>
             {children}
